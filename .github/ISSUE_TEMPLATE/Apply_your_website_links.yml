@@ -1,0 +1,82 @@
+name: 添加你的个人网站链接
+description: 这个Issue会被Action自动处理，添加你的个人网站链接到SiteHub中
+title: "[新网站]: "
+labels:
+  - new-site
+  - pending
+body: 
+  - type: markdown
+    attributes:
+      value: |
+        ## 🌐 欢迎提交你的网站
+
+        填写以下信息后提交，系统会自动处理收录请求。
+
+        ---
+
+  - type: input
+    id: site_url
+    attributes:
+      label: 站点 URL
+      description: 网站地址（必填）
+      placeholder: https://www.example.com
+    validations:
+      required: true
+
+  - type: input
+    id: site_name
+    attributes:
+      label: 站点名称
+      description: 网站名称（必填）
+      placeholder: Blog
+    validations:
+      required: true
+
+  - type: textarea
+    id: site_description
+    attributes:
+      label: 站点描述
+      description: 网站简介（可选）
+      placeholder: 
+    validations:
+      required: false
+
+  - type: input
+    id: site_icon
+    attributes:
+      label: 站点图标 URL
+      description: 网站 favicon 的地址（可选）
+      placeholder: https://www.example.com/favicon.ico
+    validations:
+      required: false
+
+  - type: input
+    id: site_color
+    attributes:
+      label: 站点主题色
+      description: 网站的主色调（可选，使用十六进制颜色码）
+      placeholder: '#1a73e8'
+    validations:
+      required: false
+
+  - type: input
+    id: site_email
+    attributes:
+      label: 所有者联系邮箱
+      description: 用于联系（可选）
+      placeholder: user@example.com
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: 提交确认
+      description: 提交前请确认以下事项
+      options:
+        - label: 我确认这是我自己拥有或运营的网站
+          required: true
+        - label: 我同意被收录到公开列表中
+          required: true
+        - label: 我理解退出需要联系管理员
+          required: true
