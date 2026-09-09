@@ -107,7 +107,7 @@ else
     fi
 fi
 echo "✅ 索引文件更新完成"
-# ========== 检查 URL 是否已存在（JSONL 专用） ==========
+# ========== 检查 URL 是否已存在 ==========
 JSONL_FILE="data/${PREFIX}.jsonl"
 if [ -f "$JSONL_FILE" ] && jq -s -e --arg url "$SITE_URL" 'any(.[] | .url == $url)' "$JSONL_FILE" > /dev/null 2>&1; then
     echo "⚠️ URL 已存在，跳过收录"
