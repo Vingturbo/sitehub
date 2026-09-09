@@ -23,7 +23,7 @@ echo "🔍 图标: $SITE_ICON"
 echo "🔍 颜色: $SITE_COLOR"
 echo "🔍 邮箱: $SITE_EMAIL"
 
-HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL")
+HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL" || echo "curl脚本错误，请检查 URL 是否正确")
 
 if [ "$HTTP_CODE" -eq 200 ]; then
     echo "✅ 网站正常"
