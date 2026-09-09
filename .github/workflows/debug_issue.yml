@@ -1,0 +1,43 @@
+name: Debug Issue Info
+
+on:
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, assigned, unassigned]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 打印 Issue 全部信息
+        run: |
+          echo "========== Issue 完整信息 =========="
+          echo "${{ toJSON(github.event.issue) }}"
+          echo "===================================="
+          echo ""
+          echo "========== Issue 编号 =========="
+          echo "${{ github.event.issue.number }}"
+          echo "================================"
+          echo ""
+          echo "========== Issue 标题 =========="
+          echo "${{ github.event.issue.title }}"
+          echo "================================"
+          echo ""
+          echo "========== Issue Body =========="
+          echo "${{ github.event.issue.body }}"
+          echo "================================"
+          echo ""
+          echo "========== Issue 状态 =========="
+          echo "${{ github.event.issue.state }}"
+          echo "================================"
+          echo ""
+          echo "========== Issue 标签 =========="
+          echo "${{ toJSON(github.event.issue.labels) }}"
+          echo "================================"
+          echo ""
+          echo "========== 触发用户 =========="
+          echo "${{ github.event.issue.user.login }}"
+          echo "================================"
+          echo ""
+          echo "========== 事件类型 =========="
+          echo "${{ github.event.action }}"
+          echo "================================"
