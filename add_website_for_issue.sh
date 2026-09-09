@@ -107,9 +107,26 @@ else
     fi
 fi
 echo "✅ 索引文件更新完成"
-# ========== 检查 URL 是否已存在 ==========
+# ========== 检查 URL 是否已存在（逐行 jq 解析） ==========
 JSONL_FILE="data/${PREFIX}.jsonl"
-if [ -f "$JSONL_FILE" ] && jq -s -e --arg url "$SITE_URL" 'any(.[] | .url == $url)' "$JSONL_FILE" > /dev/null 2>&1; then
+URL_FOUND=false
+
+if [ -f "$JSONL_FILE" ]; then
+    echo "🔍 检查 URL 是否已存在..."
+    while IFS= read -r line; do
+        # 跳过空行
+        [ -z "$line" ] && continue
+        
+        # 用 jq 提取 URL 并比较
+        EXISTING_URL=$(echo "$line" | jq -r '.url' 2>/dev/null)
+        if [ "$EXISTING_URL" = "$SITE_URL" ]; then
+            URL_FOUND=true
+            break
+        fi
+    done < "$JSONL_FILE"
+fi
+
+if [ "$URL_FOUND" = true ]; then
     echo "⚠️ URL 已存在，跳过收录"
     echo "reply=ℹ️ 该网站已被收录，无需重复提交" >> $GITHUB_OUTPUT
     exit 0
