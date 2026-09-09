@@ -11,6 +11,11 @@ SITE_ICON=$(echo "$ISSUE_BODY" | sed -n '15p')
 SITE_COLOR=$(echo "$ISSUE_BODY" | sed -n '19p')
 SITE_EMAIL=$(echo "$ISSUE_BODY" | sed -n '23p')
 
+[ "$SITE_DESC" = "_No response_" ] && SITE_DESC=""
+[ "$SITE_ICON" = "_No response_" ] && SITE_ICON=""
+[ "$SITE_COLOR" = "_No response_" ] && SITE_COLOR=""
+[ "$SITE_EMAIL" = "_No response_" ] && SITE_EMAIL=""
+
 echo "🔍 URL: $SITE_URL"
 echo "🔍 名称: $SITE_NAME"
 echo "🔍 描述: $SITE_DESC"
