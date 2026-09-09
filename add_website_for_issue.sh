@@ -36,7 +36,7 @@ fi
 # ========== 验证图标 URL（如果填写了） ==========
 if [ -n "$SITE_ICON" ]; then
     echo "🔍 验证图标 URL..."
-    ICON_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_ICON")
+    ICON_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_ICON" || echo "curl脚本错误，请检查图标 URL 是否正确")
     if [ "$ICON_CODE" -ne 200 ]; then
         echo "❌ 图标不可访问（HTTP $ICON_CODE）"
         echo "reply=❌ 提交失败：图标 URL 不可访问（HTTP $ICON_CODE），请确认图标地址正确" >> $GITHUB_OUTPUT
@@ -107,6 +107,13 @@ else
     fi
 fi
 echo "✅ 索引文件更新完成"
+# ========== 检查 URL 是否已存在（JSONL 专用） ==========
+JSONL_FILE="data/${PREFIX}.jsonl"
+if [ -f "$JSONL_FILE" ] && jq -s -e --arg url "$SITE_URL" 'any(.[] | .url == $url)' "$JSONL_FILE" > /dev/null 2>&1; then
+    echo "⚠️ URL 已存在，跳过收录"
+    echo "reply=ℹ️ 该网站已被收录，无需重复提交" >> $GITHUB_OUTPUT
+    exit 0
+fi
 echo "$JSON_LINE" >> "data/$PREFIX.jsonl"
 echo "✅ jsonl 文件更新完成"
 git add data/ index.txt
