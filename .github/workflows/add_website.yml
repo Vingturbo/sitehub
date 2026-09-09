@@ -1,4 +1,4 @@
-name: Debug Issue Info
+name: Add Website
 
 on:
   issues:
