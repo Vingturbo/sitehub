@@ -3,7 +3,6 @@ description: 这个Issue会被Action自动处理，添加你的个人网站链�
 title: "[新网站]: "
 labels:
   - new-site
-  - pending
 body: 
   - type: markdown
     attributes:
