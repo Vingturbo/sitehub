@@ -1,0 +1,39 @@
+name: Debug Issue Info
+
+on:
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, assigned, unassigned]
+
+jobs:
+  add_website:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'new-site')
+    steps:
+      - name: 复制仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 处理git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: 执行收录脚本
+        id: process
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          SUBMITTER: ${{ github.event.issue.user.login }}
+        run: chmod +x ./add_website_for_issue.sh && bash ./add_website_for_issue.sh
+      - name: 回复 Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const reply = `${{ steps.process.outputs.reply }}`;
+            if (reply) {
+              github.rest.issues.createComment({
+                issue_number: ${{ github.event.issue.number }},
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: reply
+              });
+            }
