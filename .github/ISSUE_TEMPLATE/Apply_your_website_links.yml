@@ -73,7 +73,7 @@ body:
       label: 提交确认
       description: 提交前请确认以下事项
       options:
-        - label: 我确认这是我自己拥有或运营的网站
+        - label: 我确认我是网站文件所有者，或得到了所有者的明确授权
           required: true
         - label: 我同意被收录到公开列表中
           required: true
