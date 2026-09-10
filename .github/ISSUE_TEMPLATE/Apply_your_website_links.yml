@@ -67,6 +67,24 @@ body:
     validations:
       required: false
 
+  - type: input
+    id: site_owner
+    attributes:
+      label: 网站文件所有者 GitHub 用户名
+      description: 如果网站是你的，留空即可；如果是帮别人提交，请填写对方的 GitHub 用户名（可选）
+      placeholder: 例如 Vingturbo
+    validations:
+      required: false
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 备注
+      description: 想说的话，或者补充说明（可选，程序不会处理）
+      placeholder: 例如：这是帮我朋友提交的...
+    validations:
+      required: false
+
   - type: checkboxes
     id: agreement
     attributes:

@@ -22,11 +22,13 @@ SITE_DESC=$(echo "$ISSUE_BODY" | sed -n '11p')
 SITE_ICON=$(echo "$ISSUE_BODY" | sed -n '15p')
 SITE_COLOR=$(echo "$ISSUE_BODY" | sed -n '19p')
 SITE_EMAIL=$(echo "$ISSUE_BODY" | sed -n '23p')
+SITE_OWNER=$(echo "$ISSUE_BODY" | sed -n '27p')
 
 [ "$SITE_DESC" = "_No response_" ] && SITE_DESC=""
 [ "$SITE_ICON" = "_No response_" ] && SITE_ICON=""
 [ "$SITE_COLOR" = "_No response_" ] && SITE_COLOR=""
 [ "$SITE_EMAIL" = "_No response_" ] && SITE_EMAIL=""
+[ "$SITE_OWNER" = "_No response_" ] && SITE_OWNER=""
 
 echo "🔍 URL: $SITE_URL"
 echo "🔍 名称: $SITE_NAME"
@@ -34,6 +36,7 @@ echo "🔍 描述: $SITE_DESC"
 echo "🔍 图标: $SITE_ICON"
 echo "🔍 颜色: $SITE_COLOR"
 echo "🔍 邮箱: $SITE_EMAIL"
+echo "🔍 所有者: $SITE_OWNER"
 
 check_length "$SITE_URL" 500 "站点 URL"
 check_length "$SITE_NAME" 100 "站点名称"
@@ -41,7 +44,11 @@ check_length "$SITE_DESC" 500 "站点描述"
 check_length "$SITE_ICON" 500 "图标 URL"
 check_length "$SITE_COLOR" 7 "主题色"
 check_length "$SITE_EMAIL" 254 "邮箱"
+check_length "$SITE_OWNER" 100 "所有者 GitHub 用户名"
 
+if [ -n "$SITE_OWNER" ]; then
+    SUBMITTER=$SITE_OWNER
+fi
 
 HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL" || echo "curl脚本错误，请检查 URL 是否正确")
 
