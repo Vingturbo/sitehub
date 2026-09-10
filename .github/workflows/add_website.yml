@@ -40,14 +40,12 @@ jobs:
                 repo: context.repo.repo,
                 body: reply
               });
-              // 2. 如果回复以 ✅ 开头，说明收录成功，关闭 Issue
-              if (reply.trim().startsWith('✅') || reply.trim().startsWith('ℹ️')) {
-                await github.rest.issues.update({
-                  issue_number: ${{ github.event.issue.number }},
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  state: 'closed',
-                  state_reason: 'completed'   // 标记为“已完成”
-                });
-              }
+              
+              await github.rest.issues.update({
+                issue_number: ${{ github.event.issue.number }},
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'closed',
+                state_reason: 'completed'   // 标记为“已完成”
+              });
             }

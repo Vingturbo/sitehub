@@ -3,6 +3,18 @@ set -e
 
 echo "📝 开始处理 Issue #$ISSUE_NUMBER"
 
+# ========== 长度检查 ==========
+check_length() {
+    local value="$1"
+    local max="$2"
+    local field="$3"
+    if [ ${#value} -gt "$max" ]; then
+        echo "❌ $field 长度超限：${#value} > $max"
+        echo "reply=❌ 提交失败：$field 长度超过限制（最多 $max 字符）" >> $GITHUB_OUTPUT
+        exit 0
+    fi
+}
+
 # ========== 提取字段（固定行号） ==========
 SITE_URL=$(echo "$ISSUE_BODY" | sed -n '3p')
 SITE_NAME=$(echo "$ISSUE_BODY" | sed -n '7p')
@@ -23,6 +35,14 @@ echo "🔍 图标: $SITE_ICON"
 echo "🔍 颜色: $SITE_COLOR"
 echo "🔍 邮箱: $SITE_EMAIL"
 
+check_length "$SITE_URL" 500 "站点 URL"
+check_length "$SITE_NAME" 100 "站点名称"
+check_length "$SITE_DESC" 500 "站点描述"
+check_length "$SITE_ICON" 500 "图标 URL"
+check_length "$SITE_COLOR" 7 "主题色"
+check_length "$SITE_EMAIL" 254 "邮箱"
+
+
 HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL" || echo "curl脚本错误，请检查 URL 是否正确")
 
 if [ "$HTTP_CODE" -eq 200 ]; then
@@ -30,7 +50,7 @@ if [ "$HTTP_CODE" -eq 200 ]; then
 else
     echo "❌ 状态码：$HTTP_CODE"
     echo "reply=❌ 提交失败: 站点返回状态码错误,不是200(HTTP $HTTP_CODE),请确认 URL 及 网站是否正常" >> $GITHUB_OUTPUT
-    exit 1
+    exit 0
 fi
 
 # ========== 验证图标 URL（如果填写了） ==========
@@ -40,7 +60,7 @@ if [ -n "$SITE_ICON" ]; then
     if [ "$ICON_CODE" -ne 200 ]; then
         echo "❌ 图标不可访问（HTTP $ICON_CODE）"
         echo "reply=❌ 提交失败：图标 URL 不可访问（HTTP $ICON_CODE），请确认图标地址正确" >> $GITHUB_OUTPUT
-        exit 1
+        exit 0
     else
         echo "✅ 图标可访问（HTTP $ICON_CODE）"
     fi
@@ -52,7 +72,7 @@ if [ -n "$SITE_COLOR" ]; then
     if ! echo "$SITE_COLOR" | grep -qE '^#[0-9a-fA-F]{6}$'; then
         echo "❌ 主题色格式错误：$SITE_COLOR"
         echo "reply=❌ 提交失败：主题色格式不正确，应为 6 位十六进制颜色码（如 #1a73e8）" >> $GITHUB_OUTPUT
-        exit 1
+        exit 0
     else
         echo "✅ 主题色格式正确"
     fi
@@ -64,7 +84,7 @@ if [ -n "$SITE_EMAIL" ]; then
     if ! echo "$SITE_EMAIL" | grep -qE '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'; then
         echo "❌ 邮箱格式错误：$SITE_EMAIL"
         echo "reply=❌ 提交失败：邮箱格式不正确，请填写有效的邮箱地址（如 user@example.com）" >> $GITHUB_OUTPUT
-        exit 1
+        exit 0
     else
         echo "✅ 邮箱格式正确"
     fi
