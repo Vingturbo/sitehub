@@ -39,15 +39,25 @@
             border-radius: 16px;
             background: rgba(0, 0, 0, 0.8);
             /* 半透明黑底 */
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
         }
 
         .card:link,
         .card:visited,
-        .card:hover,
         .card:active {
             text-decoration: none;
             color: inherit;
         }
+
+        .card:hover {
+            background: rgba(0, 0, 0, 0.95);
+            /* 背景加深 */
+            transform: translateY(-2px);
+            /* 上浮 2px */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+            /* 加一层投影 */
+        }
+
 
         .site-list {
             list-style: none;
@@ -81,10 +91,21 @@
             text-overflow: ellipsis;
         }
 
-        .site-text>div {
+        .site-text>* {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin: 0;
+        }
+
+        .site-text h3 {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .site-text p {
+            font-size: 0.85rem;
+            color: #ccc;
         }
 
         #text-print {
@@ -149,7 +170,7 @@
                 GitHub 项目地址
             </a>
         </p>
-        <p class="footer-copy">SiteHub © 2026</p>
+        <p class="footer-copy">SiteHub © 2026<br>By Vingturbo</p>
     </footer>
     <script>
         function handleCardClick(url) {
@@ -229,10 +250,10 @@
                     var textDiv = document.createElement('div');
                     textDiv.className = 'site-text';
 
-                    var nameEl = document.createElement('div');
+                    var nameEl = document.createElement('h3');
                     nameEl.textContent = site.name;
 
-                    var descEl = document.createElement('div');
+                    var descEl = document.createElement('p');
                     descEl.textContent = (site.description && site.description !== '_No response_')
                         ? site.description
                         : '暂无简介';
