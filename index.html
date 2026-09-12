@@ -22,6 +22,10 @@
             background-repeat: no-repeat;
         }
 
+        p {
+            margin: 0.25em 0;
+        }
+
         .card {
             text-decoration: none;
             color: inherit;
@@ -82,16 +86,71 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        #text-print {
+            min-height: 1.5em;
+            width: fit-content;
+            /* 宽度跟随内容 */
+            margin: 0 auto 24px auto;
+            /* 居中 + 底部间距 */
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 16px;
+            padding: 2px 8px;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+        }
+
+        .footer {
+            margin-top: 48px;
+            padding: 32px 16px;
+            background: rgba(0, 0, 0, 0.85);
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            border-radius: 8px;
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            border-bottom: 1px solid #555;
+            transition: border-color 0.2s;
+        }
+
+        .footer a:hover {
+            border-bottom-color: #fff;
+        }
+
+        .footer-copy {
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 16px;
+        }
     </style>
 </head>
 
 <body>
 
     <h1>sitehub-个人网站聚合平台</h1>
-    <p id="text-print">123</p>
+    <p id="text-print">Hello World!</p>
     <ul class="site-list" id="site-list">
 
     </ul>
+    <footer class="footer">
+        <p>想要添加你的网站？</p>
+        <p>
+            <a href="https://github.com/Vingturbo/sitehub/issues/new?template=Apply_your_website_links.yml"
+                target="_blank">
+                点击提交 Issue
+            </a>
+        </p>
+        <p>
+            <a href="https://github.com/Vingturbo/sitehub" target="_blank">
+                GitHub 项目地址
+            </a>
+        </p>
+        <p class="footer-copy">SiteHub © 2026</p>
+    </footer>
     <script>
         function handleCardClick(url) {
             window.open(url, '_blank');
@@ -213,8 +272,45 @@
             li.appendChild(a);
             ul.appendChild(li);
         }
+        // 延迟辅助函数
+        var sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        async function typeWriter() {
+            var p = document.getElementById('text-print');
+            if (!p) return;
+
+            try {
+                // 读取 say.txt（复用 BASE_URL，这样本地和线上都能用）
+                var res = await fetch(`${BASE_URL}say.txt`);
+                if (!res.ok) return; // 读取失败就静默退出，不要影响主列表
+                var text = await res.text();
+
+                // 按行分割，过滤空行
+                var lines = text.split('\n').map(s => s.trim()).filter(s => s !== '');
+                if (lines.length === 0) return;
+                p.textContent = ''; // 清空初始文本
+                while (true) {
+                    // 随机选一行
+                    var randomLine = lines[Math.floor(Math.random() * lines.length)];
+                    for (var i = 0; i < randomLine.length; i++) {
+                        p.textContent += randomLine.charAt(i);
+                        await sleep(120); // 120毫秒一个字，你可以按喜好调
+                    }
+                    await sleep(2000); // 打完后停顿 2 秒
+                    var original = p.textContent;
+                    for (var j = 0; j < original.length; j++) {
+                        p.textContent = original.slice(0, -j - 1); // 删除最后一个字
+                        await sleep(50); // 50毫秒删除一个字
+                    }
+                    p.textContent = ''; // 清空文本
+                }
+            } catch (e) {
+                console.error('打字机加载失败:', e);
+            }
+        }
 
         main();
+        typeWriter();
     </script>
 </body>
 
