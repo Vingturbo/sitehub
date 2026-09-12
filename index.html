@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.png">
+    <title>sitehub-个人网站聚合平台</title>
+    <style>
+        body {
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            background-image: url('background.webp');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .card {
+            text-decoration: none;
+            color: inherit;
+            width: 80%;
+            height: 80px;
+            padding: 0 16px;
+            margin: 0 auto 16px;
+        }
+
+        .card:link,
+        .card:visited,
+        .card:hover,
+        .card:active {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .site-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 16px;
+        }
+
+        .site-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>sitehub-个人网站聚合平台</h1>
+    <h3 id="text-print"></h3>
+    <ul class="site-list" id="site-list">
+
+    </ul>
+    <script>
+        function handleCardClick(url) {
+            window.open(url, '_blank');
+        }
+
+        var siteList = document.getElementById('site-list');
+        var BASE_URL = window.location.protocol === 'file:'
+            ? 'https://raw.githubusercontent.com/Vingturbo/sitehub/refs/heads/main/'
+            : './';
+
+        async function main() {
+            try {
+                siteList.innerHTML = '';
+                var indexRes = await fetch(`${BASE_URL}index.txt`);
+                var indexText = await indexRes.text();
+                var prefixes = indexText
+                    .split(/\s+/)
+                    .map(p => p.trim())
+                    .filter(p => p !== '');
+
+                console.log('前缀列表:', prefixes);
+                // ========== 并发获取所有 jsonl ==========
+                var promises = prefixes.map(prefix =>
+                    fetch(`${BASE_URL}data/${prefix}.jsonl`).then(res => res.text())
+                );
+
+                var texts = await Promise.all(promises);
+
+                // ========== 解析并存入数组 ==========
+                var allSites = [];
+
+                texts.forEach(text => {
+                    text.split('\n').forEach(line => {
+                        var trimmed = line.trim();
+                        if (trimmed !== '') {
+                            allSites.push(JSON.parse(trimmed));
+                        }
+                    });
+                });
+
+                console.log('总站点数:', allSites.length);
+                console.log(allSites);
+            } catch (err) {
+                // 出错 → 显示重试按钮
+                console.error(err);
+                showRetry("Error: " + err.message);
+            }
+        }
+
+        function showRetry(err) {
+            const ul = document.getElementById('site-list');
+            ul.innerHTML = ''; // 清空旧内容
+
+            // 创建 li > a 结构
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = 'javascript:void(0)';
+            a.textContent = '加载失败，点击重试';
+            a.style.cursor = 'pointer';
+            a.style.color = '#fff';
+            a.style.textDecoration = 'underline';
+
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                window.location.reload();
+            });
+
+            li.appendChild(a);
+            ul.appendChild(li);
+        }
+
+        main();
+    </script>
+</body>
+
+</html>
