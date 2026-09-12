@@ -46,8 +46,8 @@ check_length "$SITE_COLOR" 7 "主题色"
 check_length "$SITE_EMAIL" 254 "邮箱"
 check_length "$SITE_OWNER" 100 "所有者 GitHub 用户名"
 
-if [ -n "$SITE_OWNER" ]; then
-    SUBMITTER=$SITE_OWNER
+if [ -z "$SITE_OWNER" ]; then
+    SITE_OWNER=$SUBMITTER
 fi
 
 HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL" || echo "curl脚本错误，请检查 URL 是否正确")
@@ -109,7 +109,7 @@ JSON_LINE=$(jq -c -n \
     --arg icon "$SITE_ICON" \
     --arg color "$SITE_COLOR" \
     --arg email "$SITE_EMAIL" \
-    --arg submitter "$SUBMITTER" \
+    --arg submitter "$SITE_OWNER" \
     '{url: $url, name: $name, description: $desc, icon: $icon, color: $color, email: $email, submitter: $submitter, added_at: now | todate}'
 )
 
@@ -161,7 +161,7 @@ fi
 echo "$JSON_LINE" >> "data/$PREFIX.jsonl"
 echo "✅ jsonl 文件更新完成"
 git add data/ index.txt
-git commit -m "Add website $SITE_NAME ($SITE_URL)"
+git commit -m "Add website $SITE_NAME ($SITE_URL) for issue $ISSUE_NUMBER"
 git push origin main
 echo "✅ 提交完成"
 echo "reply=✅ 提交成功: 站点 $SITE_NAME ($SITE_URL) 已成功收录" >> $GITHUB_OUTPUT
