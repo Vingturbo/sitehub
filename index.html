@@ -27,8 +27,14 @@
             color: inherit;
             width: 80%;
             height: 80px;
-            padding: 0 16px;
+            padding: 0 8px;
             margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.8);
+            /* 半透明黑底 */
         }
 
         .card:link,
@@ -51,14 +57,30 @@
             flex-shrink: 0;
             object-fit: cover;
             border-radius: 8px;
-            margin-right: 16px;
+            margin-right: 8px;
         }
 
         .site-text {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* 改成 center，让内容垂直居中 */
+            gap: 4px;
+            padding: 12px 0;
+            text-align: left;
+            /* 关键：文字左对齐 */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-width: 0;
+        }
+
+        .site-text>div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -66,7 +88,7 @@
 <body>
 
     <h1>sitehub-个人网站聚合平台</h1>
-    <h3 id="text-print"></h3>
+    <p id="text-print">123</p>
     <ul class="site-list" id="site-list">
 
     </ul>
@@ -112,6 +134,57 @@
 
                 console.log('总站点数:', allSites.length);
                 console.log(allSites);
+
+                allSites.forEach(function (site) {
+                    var li = document.createElement('li');
+
+                    var a = document.createElement('a');
+                    a.className = 'card';
+                    a.href = 'javascript:void(0)';
+                    a.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        handleCardClick(site.url);
+                    });
+
+                    var img = document.createElement('img');
+                    img.className = 'icon';
+                    img.alt = site.name;
+
+                    // 生成首字母 SVG 占位图
+                    var firstChar = site.name ? site.name.charAt(0).toUpperCase() : '?';
+                    var bgColor = site.color || '#333333';
+                    var svgString = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">' +
+                        '<rect width="64" height="64" fill="' + bgColor + '" rx="8"/>' +
+                        '<text x="32" y="42" font-size="28" font-family="sans-serif" font-weight="bold" fill="#ffffff" text-anchor="middle">' + firstChar + '</text>' +
+                        '</svg>';
+                    var defaultIcon = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+
+                    img.src = site.icon || defaultIcon;
+
+                    // 图片加载失败时，也替换为生成的首字母图
+                    img.onerror = function () {
+                        this.onerror = null;
+                        this.src = defaultIcon;
+                    };
+
+                    var textDiv = document.createElement('div');
+                    textDiv.className = 'site-text';
+
+                    var nameEl = document.createElement('div');
+                    nameEl.textContent = site.name;
+
+                    var descEl = document.createElement('div');
+                    descEl.textContent = (site.description && site.description !== '_No response_')
+                        ? site.description
+                        : '暂无简介';
+
+                    textDiv.appendChild(nameEl);
+                    textDiv.appendChild(descEl);
+                    a.appendChild(img);
+                    a.appendChild(textDiv);
+                    li.appendChild(a);
+                    siteList.appendChild(li);
+                });
             } catch (err) {
                 // 出错 → 显示重试按钮
                 console.error(err);
