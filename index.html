@@ -9,6 +9,13 @@
     <link rel="icon" href="favicon.png">
     <title>sitehub-个人网站聚合平台</title>
     <style>
+        @font-face {
+            font-family: 'Unifont';
+            src: url('./unifont-17.0.05.woff2') format('woff2');
+            font-display: swap;
+            /* 关键：字体加载失败或太慢时，先用默认字体顶上，不白屏 */
+        }
+
         body {
             color: #fff;
             display: flex;
@@ -20,6 +27,7 @@
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
+            font-family: 'Unifont', monospace;
         }
 
         p {
@@ -166,7 +174,8 @@
             </a>
         </p>
         <p>
-            <a href="https://github.com/Vingturbo/sitehub" target="_blank">GitHub 项目地址</a> - <a href="mailto:1737223844@qq.com">联系我</a>
+            <a href="https://github.com/Vingturbo/sitehub" target="_blank">GitHub 项目地址</a> - <a
+                href="mailto:1737223844@qq.com">联系我</a>
         </p>
         <p class="footer-copy">SiteHub © 2026<br>By Vingturbo</p>
     </footer>
