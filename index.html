@@ -13,7 +13,6 @@
             font-family: 'Unifont';
             src: url('./unifont-17.0.05.woff2') format('woff2');
             font-display: swap;
-            /* 关键：字体加载失败或太慢时，先用默认字体顶上，不白屏 */
         }
 
         body {
@@ -59,11 +58,8 @@
 
         .card:hover {
             background: rgba(0, 0, 0, 0.95);
-            /* 背景加深 */
             transform: translateY(-2px);
-            /* 上浮 2px */
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-            /* 加一层投影 */
         }
 
 
@@ -89,11 +85,9 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* 改成 center，让内容垂直居中 */
             gap: 4px;
             padding: 12px 0;
             text-align: left;
-            /* 关键：文字左对齐 */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -248,7 +242,6 @@
 
                     img.src = site.icon || defaultIcon;
 
-                    // 图片加载失败时，也替换为生成的首字母图
                     img.onerror = function () {
                         this.onerror = null;
                         this.src = defaultIcon;
@@ -273,7 +266,6 @@
                     siteList.appendChild(li);
                 });
             } catch (err) {
-                // 出错 → 显示重试按钮
                 console.error(err);
                 showRetry("Error: " + err.message);
             }
@@ -281,7 +273,7 @@
 
         function showRetry(err) {
             const ul = document.getElementById('site-list');
-            ul.innerHTML = ''; // 清空旧内容
+            ul.innerHTML = '';
 
             // 创建 li > a 结构
             const li = document.createElement('li');
@@ -322,7 +314,7 @@
                     var randomLine = lines[Math.floor(Math.random() * lines.length)];
                     for (var i = 0; i < randomLine.length; i++) {
                         p.textContent += randomLine.charAt(i);
-                        await sleep(120); // 120毫秒一个字，你可以按喜好调
+                        await sleep(120);
                     }
                     await sleep(2000); // 打完后停顿 2 秒
                     var original = p.textContent;
