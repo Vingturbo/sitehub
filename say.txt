@@ -174,3 +174,62 @@
 而玩家就是爱。
 你就是那个玩家。
 醒来吧。
+Hello, World.
+There is no place like 127.0.0.1
+The cake is a lie.
+I use Arch btw.
+This is fine.
+Do or do not, there is no try.
+こんにちは、世界。
+人間は考える葦である。
+生きるとは、自分自身を創ることだ。
+アーチリナックス
+Je pense, donc je suis.
+C'est la vie.
+Ich denke, also bin ich.
+Der Mensch ist, was er isst.
+Всё будет хорошо.
+Cogito, ergo sum.
+Veni, vidi, vici.
+Errare humanum est.
+01001000 01100101 01101100 01101100 01101111
+To be or not to be, that is the question.
+All models are wrong, but some are useful.
+L'enfer, c'est les autres.
+Rien ne se perd, rien ne se crée, tout se transforme.
+Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt.
+Wer mit Ungeheuern kämpft, mag zusehen, dass er nicht dabei zum Ungeheuer wird.
+La vida es sueño.
+El sueño de la razón produce monstruos.
+Красота спасёт мир.
+Alea iacta est.
+Sapere aude.
+我思う、ゆえに我あり。
+道可道，非常道。
+已识乾坤大，犹怜草木青。
+01010111 01100001 01101011 01100101 00100000 01110101 01110000
+Premature optimization is the root of all evil.
+Simplicity is the ultimate sophistication.
+Talk is cheap. Show me the code.
+Programs must be written for people to read, and only incidentally for machines to execute.
+Any sufficiently advanced technology is indistinguishable from magic.
+The best way to predict the future is to invent it.
+It works on my machine.
+There are only two hard things in Computer Science: cache invalidation and naming things.
+Real programmers count from 0.
+First, solve the problem. Then, write the code.
+Deleted code is debugged code.
+The most disastrous thing you can ever learn is your first programming language.
+Nel mezzo del cammin di nostra vita...
+En un lugar de la Mancha, de cuyo nombre no quiero acordarme...
+안녕하세요, 세계.
+أنا أفكر، إذن أنا موجود.
+γνῶθι σεαυτόν
+अहं ब्रह्मास्मि
+Carpe diem.
+Memento mori.
+Amor fati.
+Wer immer strebend sich bemüht, den können wir erlösen.
+On ne voit bien qu'avec le cœur. L'essentiel est invisible pour les yeux.
+Кто не рискует, тот не пьёт шампанское.
+01010111 01101111 01110010 01101100 01100100
