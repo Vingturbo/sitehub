@@ -51,7 +51,7 @@ SiteHub 的初衷，是为那些自己搭建了个人网站或博客，却苦于
 │   └── ...
 ├── add_website_for_issue.sh                   # 提交网站到仓库的脚本
 ├── background.webp                            # 背景图片
-├── favicon.png                                # 站点图标
+├── favicon-*.png                              # 站点图标
 ├── index.html                                 # 前端首页，展示所有网站卡片
 ├── index.txt                                  # 站点索引文件
 ├── LICENSE                                    # GPLv3 协议
