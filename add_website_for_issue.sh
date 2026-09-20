@@ -164,4 +164,4 @@ git add data/ index.txt
 git commit -m "Add website $SITE_NAME ($SITE_URL) for issue $ISSUE_NUMBER"
 git push origin main
 echo "✅ 提交完成"
-echo "reply=✅ 提交成功: 站点 $SITE_NAME ($SITE_URL) 已成功收录" >> $GITHUB_OUTPUT
+echo "reply=✅ 提交成功: 站点 $SITE_NAME ($SITE_URL) 已成功收录，向你的朋友们推荐这个项目吧，可以点个 Star 哦！" >> $GITHUB_OUTPUT
