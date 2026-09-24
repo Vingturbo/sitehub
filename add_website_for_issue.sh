@@ -23,12 +23,15 @@ SITE_ICON=$(echo "$ISSUE_BODY" | sed -n '15p')
 SITE_COLOR=$(echo "$ISSUE_BODY" | sed -n '19p')
 SITE_EMAIL=$(echo "$ISSUE_BODY" | sed -n '23p')
 SITE_OWNER=$(echo "$ISSUE_BODY" | sed -n '27p')
+SITE_REDIRECT=$(echo "$ISSUE_BODY" | sed -n '31p')
 
 [ "$SITE_DESC" = "_No response_" ] && SITE_DESC=""
 [ "$SITE_ICON" = "_No response_" ] && SITE_ICON=""
 [ "$SITE_COLOR" = "_No response_" ] && SITE_COLOR=""
 [ "$SITE_EMAIL" = "_No response_" ] && SITE_EMAIL=""
 [ "$SITE_OWNER" = "_No response_" ] && SITE_OWNER=""
+[ "$SITE_REDIRECT" = "_No response_" ] && SITE_REDIRECT=""
+
 
 echo "🔍 URL: $SITE_URL"
 echo "🔍 名称: $SITE_NAME"
@@ -37,6 +40,7 @@ echo "🔍 图标: $SITE_ICON"
 echo "🔍 颜色: $SITE_COLOR"
 echo "🔍 邮箱: $SITE_EMAIL"
 echo "🔍 所有者: $SITE_OWNER"
+echo "🔍 跳转页: $SITE_REDIRECT"
 
 check_length "$SITE_URL" 500 "站点 URL"
 check_length "$SITE_NAME" 100 "站点名称"
@@ -45,12 +49,13 @@ check_length "$SITE_ICON" 500 "图标 URL"
 check_length "$SITE_COLOR" 7 "主题色"
 check_length "$SITE_EMAIL" 254 "邮箱"
 check_length "$SITE_OWNER" 100 "所有者 GitHub 用户名"
+check_length "$SITE_REDIRECT" 500 "跳转页 URL"
 
 if [ -z "$SITE_OWNER" ]; then
     SITE_OWNER=$SUBMITTER
 fi
 
-HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL" || echo "curl脚本错误，请检查 URL 是否正确")
+HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_URL" || echo "000")
 
 if [ "$HTTP_CODE" -eq 200 ]; then
     echo "✅ 网站正常"
@@ -63,13 +68,26 @@ fi
 # ========== 验证图标 URL（如果填写了） ==========
 if [ -n "$SITE_ICON" ]; then
     echo "🔍 验证图标 URL..."
-    ICON_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_ICON" || echo "curl脚本错误，请检查图标 URL 是否正确")
+    ICON_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_ICON" || echo "000")
     if [ "$ICON_CODE" -ne 200 ]; then
         echo "❌ 图标不可访问（HTTP $ICON_CODE）"
         echo "reply=❌ 提交失败：图标 URL 不可访问（HTTP $ICON_CODE），请确认图标地址正确" >> $GITHUB_OUTPUT
         exit 0
     else
         echo "✅ 图标可访问（HTTP $ICON_CODE）"
+    fi
+fi
+
+# ========== 验证跳转中间页 URL（如果填写了） ==========
+if [ -n "$SITE_REDIRECT" ]; then
+    echo "🔍 验证跳转中间页 URL..."
+    HTTP_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "$SITE_REDIRECT" || echo "000")
+    if [ "$HTTP_CODE" -ne 200 ]; then
+        echo "❌ 跳转中间页不可访问（HTTP $HTTP_CODE）"
+        echo "reply=❌ 提交失败：跳转中间页 URL 不可访问（HTTP $HTTP_CODE），请确认跳转中间页地址是否正确" >> $GITHUB_OUTPUT
+        exit 0
+    else
+        echo "✅ 跳转中间页可访问（HTTP $HTTP_CODE）"
     fi
 fi
 
@@ -110,7 +128,8 @@ JSON_LINE=$(jq -c -n \
     --arg color "$SITE_COLOR" \
     --arg email "$SITE_EMAIL" \
     --arg submitter "$SITE_OWNER" \
-    '{url: $url, name: $name, description: $desc, icon: $icon, color: $color, email: $email, submitter: $submitter, added_at: now | todate}'
+    --arg redirect "$SITE_REDIRECT" \
+    '{url: $url, name: $name, description: $desc, icon: $icon, color: $color, email: $email, submitter: $submitter, redirect_url: $redirect, added_at: now | todate}'
 )
 
 echo "📦 JSON: $JSON_LINE"

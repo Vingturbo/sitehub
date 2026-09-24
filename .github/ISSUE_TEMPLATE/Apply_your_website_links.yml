@@ -76,6 +76,15 @@ body:
     validations:
       required: false
 
+  - type: input
+    id: redirect_url
+    attributes:
+      label: 自定义跳转页 URL
+      description: 可选，留空则直接跳转网站首页 **不会写？看 [使用指南](https://github.com/Vingturbo/sitehub/wiki/redirect)**
+      placeholder: https://你的网站.com/redirect.html
+    validations:
+      required: false
+
   - type: textarea
     id: note
     attributes:
