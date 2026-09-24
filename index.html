@@ -163,6 +163,13 @@
 
 <body>
 
+    <div id="redirect-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
+        <iframe id="redirect-iframe" src="about:blank" sandbox="allow-scripts allow-same-origin"
+            style="width:100%; height:100%; border:none; background:transparent;">
+        </iframe>
+    </div>
+
     <h1>sitehub-个人网站聚合平台</h1>
     <p id="text-print">Hello World!</p>
     <ul class="site-list" id="site-list">
@@ -183,14 +190,51 @@
         <p class="footer-copy">SiteHub © 2026<br>By Vingturbo</p>
     </footer>
     <script>
-        function handleCardClick(url) {
-            window.open(url, '_blank');
-        }
+        window.addEventListener('message', function (event) {
+            if (event.data && event.data.type === 'sitehub-redirect-ready') {
+                forceRedirect();
+            }
+        });
 
         var siteList = document.getElementById('site-list');
         var BASE_URL = window.location.protocol === 'file:'
             ? 'https://raw.githubusercontent.com/Vingturbo/sitehub/refs/heads/main/'
             : './';
+
+        var allSites = [];
+        var redirectTimer = null;
+        var redirectTarget = null;
+
+        function handleCardClick(url) {
+            var site = allSites.find(function (s) { return s.url === url; });
+            var redirectUrl = site ? site.redirect_url : null;
+            if (!redirectUrl) {
+                window.open(url, '_blank'); return;
+            }
+            if (redirectTimer) return;
+
+            redirectTarget = url;
+            var modal = document.getElementById('redirect-modal');
+            var iframe = document.getElementById('redirect-iframe');
+            modal.style.display = 'block';
+            iframe.src = redirectUrl;
+            redirectTimer = setTimeout(forceRedirect, 10000);
+        }
+
+        function forceRedirect() {
+            if (redirectTimer) {
+                clearTimeout(redirectTimer);
+                redirectTimer = null;
+            }
+            if (redirectTarget) {
+                window.open(redirectTarget, '_blank');
+                redirectTarget = null;
+            }
+            document.getElementById('redirect-modal').style.display = 'none';
+            document.getElementById('redirect-iframe').src = 'about:blank';
+        }
+
+
 
         async function main() {
             try {
@@ -211,7 +255,7 @@
                 var texts = await Promise.all(promises);
 
                 // ========== 解析并存入数组 ==========
-                var allSites = [];
+                allSites = [];
 
                 texts.forEach(text => {
                     text.split('\n').forEach(line => {
@@ -337,7 +381,7 @@
                 console.error('打字机加载失败:', e);
             }
         }
-
+        allSites.push({ url: 'https://example.com', name: '测试', redirect_url: './test.html' });
         main();
         typeWriter();
     </script>
