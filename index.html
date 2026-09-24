@@ -256,6 +256,8 @@
 
                 // ========== 解析并存入数组 ==========
                 allSites = [];
+                
+                allSites.push({ url: 'https://example.com', name: '测试', redirect_url: './test.html' });
 
                 texts.forEach(text => {
                     text.split('\n').forEach(line => {
@@ -381,7 +383,6 @@
                 console.error('打字机加载失败:', e);
             }
         }
-        allSites.push({ url: 'https://example.com', name: '测试', redirect_url: './test.html' });
         main();
         typeWriter();
     </script>
