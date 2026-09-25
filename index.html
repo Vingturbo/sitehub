@@ -205,13 +205,28 @@
         var redirectTimer = null;
         var redirectTarget = null;
 
-        function handleCardClick(url) {
+        function handleCardClick(url, el) {
             var site = allSites.find(function (s) { return s.url === url; });
             var redirectUrl = site ? site.redirect_url : null;
             if (!redirectUrl) {
                 window.open(url, '_blank'); return;
             }
             if (redirectTimer) return;
+
+            var img = el.querySelector('.icon');
+            var rect = img.getBoundingClientRect();
+
+            var params = new URLSearchParams({
+                x: Math.round(rect.left),
+                y: Math.round(rect.top),
+                w: Math.round(rect.width),
+                h: Math.round(rect.height),
+                icon: img.src,
+                color: site.color || '#0F0F0F',
+                url: url
+            });
+            var sep = redirectUrl.indexOf('?') >= 0 ? '&' : '?';
+            redirectUrl += sep + params.toString();
 
             redirectTarget = url;
             var modal = document.getElementById('redirect-modal');
@@ -257,6 +272,14 @@
                 // ========== 解析并存入数组 ==========
                 allSites = [];
 
+                allSites.push({
+                    url: "https://example.com",
+                    redirect_url: "./test.html",
+                    name: "test",
+                    icon: "",
+                    color: "#00FFFF"
+                });
+
                 texts.forEach(text => {
                     text.split('\n').forEach(line => {
                         var trimmed = line.trim();
@@ -277,7 +300,7 @@
                     a.href = 'javascript:void(0)';
                     a.addEventListener('click', function (e) {
                         e.preventDefault();
-                        handleCardClick(site.url);
+                        handleCardClick(site.url, this);
                     });
 
                     var img = document.createElement('img');
