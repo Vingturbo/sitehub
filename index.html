@@ -223,7 +223,9 @@
                 h: Math.round(rect.height),
                 icon: img.src,
                 color: site.color || '#0F0F0F',
-                url: url
+                url: url,
+                name: site.name || '',
+                desc: site.description || "暂无描述"
             });
             var sep = redirectUrl.indexOf('?') >= 0 ? '&' : '?';
             redirectUrl += sep + params.toString();
