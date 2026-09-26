@@ -36,6 +36,7 @@
             background-position: center;
             background-repeat: no-repeat;
             font-family: 'Unifont', monospace;
+            visibility: hidden;
         }
 
         p {
@@ -400,8 +401,20 @@
                 console.error('打字机加载失败:', e);
             }
         }
-        main();
-        typeWriter();
+
+        var started = false;
+        function start() {
+            if (started) return;
+            started = true;
+            document.body.style.visibility = 'visible';
+            main();
+            typeWriter();
+        }
+
+        if (document.fonts && document.fonts.load) {
+            document.fonts.load('1em Unifont').then(start).catch(start);
+        }
+        setTimeout(start, 2000);
     </script>
 </body>
 
