@@ -1,0 +1,60 @@
+name: 新功能添加建议/问题反馈
+description: 对 SiteHub 提出新功能建议，或者反馈你遇到的问题
+title: "[反馈]: "
+labels:
+  - feedback
+assignees:
+  - Vingturbo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📮 感谢你的反馈
+
+        请选择下面的类型，并填写具体内容。
+
+        ---
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: 类型
+      description: 这是新功能建议，还是问题反馈？
+      options:
+        - 新功能建议
+        - 问题反馈
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 详细描述
+      description: 请尽量把问题或建议说清楚
+      placeholder: |
+        如果是问题反馈，请描述：
+        - 你做了什么
+        - 你期望发生什么
+        - 实际发生了什么
+
+        如果是新功能建议，请描述：
+        - 你想要什么功能
+        - 它能解决什么问题
+    validations:
+      required: true
+
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式
+      description: 可选。如果希望我回复你，可以留下邮箱或其他联系方式
+      placeholder: your@email.com
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ✅ 提交后我会收到通知，尽量在几天内处理。
