@@ -122,17 +122,33 @@
             color: #ccc;
         }
 
-        #text-print {
-            min-height: 1.5em;
-            width: fit-content;
-            /* 宽度跟随内容 */
+        .text-print-wrapper {
+            height: 6em;
+            width: 90%;
+            /* 固定占位 4 行 */
             margin: 0 auto 24px auto;
-            /* 居中 + 底部间距 */
+            display: flex;
+            justify-content: center;
+            /* 水平居中 */
+            align-items: flex-start;
+            /* 顶部对齐，不垂直居中 */
+        }
+
+        #text-print {
+            width: fit-content;
+            max-width: 90%;
+            max-height: 6em;
+            /* 最多 4 行 */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
             background: rgba(0, 0, 0, 0.55);
             border-radius: 16px;
             padding: 2px 8px;
             font-size: 0.95rem;
             color: #e0e0e0;
+            margin: 0;
         }
 
         .footer {
@@ -174,7 +190,26 @@
     </div>
 
     <h1>sitehub-个人网站聚合平台</h1>
-    <p id="text-print">Hello World!</p>
+    <div class="text-print-wrapper">
+        <p id="text-print">Hello World!</p>
+    </div>
+
+    <div style="text-align: center; margin: 0 auto 24px;">
+        <h2 style="margin: 0;">
+            <a href="./quid-pro-quo.html" style="
+            min-height: 1.5em;
+            width: fit-content;
+            margin: 0 auto 24px auto;
+            background: rgba(0, 0, 0, 1);
+            border-radius: 16px;
+            padding: 8px 32px;
+            color: #ffffff;
+        ">
+                致那些秉持所谓“友链互换”原则的人
+            </a>
+        </h2>
+    </div>
+
     <ul class="site-list" id="site-list">
 
     </ul>
