@@ -20,7 +20,7 @@
     <style>
         @font-face {
             font-family: 'Unifont';
-            src: local('Unifont'),url('./unifont-17.0.05.woff2') format('woff2');
+            src: local('Unifont'), url('./unifont-17.0.05.woff2') format('woff2');
             font-display: swap;
         }
 
@@ -273,6 +273,14 @@
             var iframe = document.getElementById('redirect-iframe');
             modal.style.display = 'block';
             iframe.src = redirectUrl;
+
+            // 锁住父页面滚动
+            var scrollY = window.scrollY;
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = -scrollY + 'px';
+            document.body.style.width = '100%';
+
             redirectTimer = setTimeout(forceRedirect, 10000);
         }
 
@@ -287,6 +295,14 @@
             }
             document.getElementById('redirect-modal').style.display = 'none';
             document.getElementById('redirect-iframe').src = 'about:blank';
+
+            // 解锁父页面滚动
+            var scrollY = -parseInt(document.body.style.top || '0');
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, scrollY);
         }
 
 
