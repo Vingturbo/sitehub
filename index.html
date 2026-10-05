@@ -56,9 +56,9 @@
             box-sizing: border-box;
             border-radius: 16px;
             background: rgba(0, 0, 0, 0.8);
-            /* 半透明黑底 */
             transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
             clip-path: inset(0 round 16px);
+            position: relative;
         }
 
         .card:link,
@@ -178,6 +178,21 @@
             font-size: 0.8rem;
             margin-top: 16px;
         }
+
+        .skip-link {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            color: #ccc;
+            font-size: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .skip-link:hover {
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -232,6 +247,14 @@
         window.addEventListener('message', function (event) {
             if (event.data && event.data.type === 'sitehub-redirect-ready') {
                 forceRedirect();
+            }
+        });
+
+        window.addEventListener('keydown', function (e) {
+            if (e.key.toLowerCase() === 'p') {
+                if (redirectTimer) {
+                    forceRedirect();
+                }
             }
         });
 
@@ -383,11 +406,22 @@
                         ? site.description
                         : '暂无简介';
 
+                    var skipLink = document.createElement('span');
+                    skipLink.className = 'skip-link';
+                    skipLink.textContent = '直接跳转↗';
+                    skipLink.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();  // 阻止事件冒泡到卡片
+                        window.open(site.url, '_blank');
+                    });
+
                     textDiv.appendChild(nameEl);
                     textDiv.appendChild(descEl);
                     a.appendChild(img);
                     a.appendChild(textDiv);
                     li.appendChild(a);
+
+                    a.appendChild(skipLink);
                     siteList.appendChild(li);
                 });
             } catch (err) {
