@@ -115,6 +115,19 @@ if [ -n "$SITE_EMAIL" ]; then
     fi
 fi
 
+# ========== 验证用户（如果填写了） ==========
+if [ -n "$SITE_OWNER" ]; then
+    echo "🔍 验证用户..."
+    USER_CODE=$(curl -o /dev/null -s -L -w "%{http_code}" --connect-timeout 5 "https://api.github.com/users/$SITE_OWNER" || echo "000")
+    if [ "$USER_CODE" -ne 200 ]; then
+        echo "❌ 用户不存在（HTTP $USER_CODE）"
+        echo "reply=❌ 提交失败：用户 $SITE_OWNER 不存在，请确认所有者 GitHub 用户名正确" >> $GITHUB_OUTPUT
+        exit 0
+    else
+        echo "✅ 用户存在（HTTP $USER_CODE）"
+    fi
+fi
+
 # ========== 计算哈希前缀 ==========
 PREFIX=$(echo "$SITE_URL" | md5sum | cut -c1-2)
 echo "🔑 哈希前缀: $PREFIX"
