@@ -36,6 +36,7 @@ jobs:
         with:
           script: |
             const reply = process.env.REPLY;
+            const issueNumber = parseInt(process.env.ISSUE_NUMBER, 10);
             if (reply) {
               github.rest.issues.createComment({
                 issue_number: issueNumber,
